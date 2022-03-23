@@ -11,9 +11,10 @@ namespace TPL.Data.Entities
     {
         public string Name { get; set; }
         public Guid LineId { get; set; }
-        public BusType Type { get; set; }
+        public int Places { get; set; }
+        public bool Eco { get; set; }
         public int Number { get; set; }
         public string Driver { get; set; }
-        public Line Line { get; set; }
+       // public Line Line { get; set; }
     }
 }

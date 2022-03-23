@@ -42,6 +42,8 @@ namespace TPL.Servicies
                 Email = userDto.Email,
                 Password = userDto.Password,
                 Role = UserRole.Client,
+                Address = userDto.Address,
+                Surname = userDto.Surname
 
             };
             var addedUser = await userRepository.InsertAsync(user);
@@ -52,6 +54,8 @@ namespace TPL.Servicies
                 Name = addedUser.Name,
                 Email = addedUser.Email,
                 Password = addedUser.Password,
+                Address = addedUser.Address,
+                Surname = addedUser.Surname,
                 Role = addedUser.Role,
                 CreatedAt = addedUser.CreatedAt,
                 CreatedBy = addedUser.CreatedBy

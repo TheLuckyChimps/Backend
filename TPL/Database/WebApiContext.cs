@@ -17,7 +17,7 @@ namespace TPL.Database
         public DbSet<User> Users { get; set; }
         public DbSet<Bus> Buses { get; set; }
         public DbSet<Station> Stations { get; set; }
-        public DbSet<Line> Lines { get; set; }
+        public DbSet<Route> Lines { get; set; }
         public DbSet<Announcement> Announcement { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

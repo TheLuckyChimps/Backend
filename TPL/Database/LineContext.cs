@@ -8,22 +8,25 @@ using TPL.Data.Entities;
 
 namespace TPL.Database
 {
-    public class LineContext : IEntityTypeConfiguration<Line>
+    public class LineContext : IEntityTypeConfiguration<Route>
     {
-        public void Configure(EntityTypeBuilder<Line> builder)
+        public void Configure(EntityTypeBuilder<Route> builder)
         {
             builder.HasKey(ti => ti.Id);
 
-            builder.Property(ti => ti.Name)
-               .HasMaxLength(30);
-
-            builder.HasMany(ti => ti.Buses)
-                .WithOne(li => li.Line)
-                .HasForeignKey(f => f.LineId);
+            builder.Property(ti => ti.BusId);
 
 
             builder.HasMany(ti => ti.Stations)
-                .WithMany(li => li.Lines);
+                 .WithMany(li => li.Lines);
+
+            builder.Property(ti => ti.StartName);
+
+
+            builder.Property(ti => ti.StopName);
+
+            builder.Property(ti => ti.Name)
+               .HasMaxLength(30);
 
             builder.Property(ti => ti.CreatedAt);
 

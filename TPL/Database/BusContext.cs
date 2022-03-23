@@ -14,22 +14,21 @@ namespace TPL.Database
         {
             builder.HasKey(ti => ti.Id);
 
-            builder.Property(ti => ti.Name)
-                .IsRequired();
+            builder.Property(ti => ti.Name);
 
-            builder.Property(ti => ti.Number)
-                .IsRequired();
+
+            builder.Property(ti => ti.Number);
+
 
             builder.Property(ti => ti.Driver)
-               .HasMaxLength(30)
-               .IsRequired();
+               .HasMaxLength(30);
 
-            builder.Property(ti => ti.Type)
-                .IsRequired();
 
-            builder.HasOne(ti => ti.Line)
-                   .WithMany(li => li.Buses)
-                   .HasForeignKey(fk => fk.LineId);
+            builder.Property(ty => ty.Places);
+
+
+            builder.Property(ti => ti.Eco);
+
 
             builder.Property(ti => ti.CreatedAt);
 

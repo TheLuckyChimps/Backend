@@ -6,10 +6,11 @@ using TPL.Data.Common;
 
 namespace TPL.Data.Entities
 {
-    public class Line : BaseEntity<Guid>
+    public class Product : BaseEntity<Guid>
     {
         public string Name { get; set; }
-        public List<Station> Stations { get; set; }
-        public List<Bus> Buses { get; set; }
+        public double Price { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

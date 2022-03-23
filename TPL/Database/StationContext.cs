@@ -27,10 +27,6 @@ namespace TPL.Database
             builder.Property(ti => ti.Latitude)
                 .IsRequired();
 
-            builder.HasMany(ti => ti.Lines)
-                   .WithMany(li => li.Stations);
-
-
             builder.Property(ti => ti.CreatedAt);
 
             builder.Property(ti => ti.CreatedBy);

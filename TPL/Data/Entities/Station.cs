@@ -12,7 +12,7 @@ namespace TPL.Data.Entities
         public string Address { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public List<Line> Lines { get; set; }
+        public virtual List<Route> Lines { get; set; }
 
     }
 }

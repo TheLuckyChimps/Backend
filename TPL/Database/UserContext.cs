@@ -18,11 +18,18 @@ namespace TPL.Database
             builder.Property(ti => ti.Email)
                 .IsRequired();
 
+            builder.Property(ti => ti.Surname)
+                .IsRequired();
+
+            builder.Property(ti => ti.Address)
+                .IsRequired();
+
             builder.Property(ti => ti.Password)
                 .IsRequired();
 
             builder.Property(ti => ti.Name)
-               .HasMaxLength(30);
+               .HasMaxLength(30)
+               .IsRequired();
 
             builder.Property(ti => ti.Role)
                 .HasMaxLength(20);
