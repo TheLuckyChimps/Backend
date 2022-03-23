@@ -14,6 +14,10 @@ namespace TPL.Database
         {
             builder.HasKey(ti => ti.Id);
 
+            builder.Property(ti => ti.Name);
+
+            builder.Property(ti => ti.Content);
+
             builder.Property(ti => ti.Views);
 
             builder.Property(ti => ti.CreatedAt);

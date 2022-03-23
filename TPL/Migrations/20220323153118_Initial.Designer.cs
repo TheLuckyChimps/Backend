@@ -10,8 +10,8 @@ using TPL.Database;
 namespace TPL.Migrations
 {
     [DbContext(typeof(WebApiContext))]
-    [Migration("20211205081135_BusStationLine")]
-    partial class BusStationLine
+    [Migration("20220323153118_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace TPL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("LineStation", b =>
+            modelBuilder.Entity("RouteStation", b =>
                 {
                     b.Property<Guid>("LinesId")
                         .HasColumnType("uniqueidentifier");
@@ -33,7 +33,44 @@ namespace TPL.Migrations
 
                     b.HasIndex("StationsId");
 
-                    b.ToTable("LineStation");
+                    b.ToTable("RouteStation");
+                });
+
+            modelBuilder.Entity("TPL.Data.Entities.Announcement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Views")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Announcement");
                 });
 
             modelBuilder.Entity("TPL.Data.Entities.Bus", b =>
@@ -49,9 +86,11 @@ namespace TPL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Driver")
-                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<bool>("Eco")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -62,13 +101,12 @@ namespace TPL.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Number")
                         .HasColumnType("int");
 
-                    b.Property<int>("Type")
+                    b.Property<int>("Places")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -79,15 +117,16 @@ namespace TPL.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LineId");
-
                     b.ToTable("Buses");
                 });
 
-            modelBuilder.Entity("TPL.Data.Entities.Line", b =>
+            modelBuilder.Entity("TPL.Data.Entities.Route", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BusId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
@@ -104,6 +143,12 @@ namespace TPL.Migrations
                     b.Property<string>("Name")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("StartName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StopName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -165,6 +210,10 @@ namespace TPL.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -181,6 +230,7 @@ namespace TPL.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
@@ -191,6 +241,10 @@ namespace TPL.Migrations
                     b.Property<int>("Role")
                         .HasMaxLength(20)
                         .HasColumnType("int");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -203,9 +257,9 @@ namespace TPL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("LineStation", b =>
+            modelBuilder.Entity("RouteStation", b =>
                 {
-                    b.HasOne("TPL.Data.Entities.Line", null)
+                    b.HasOne("TPL.Data.Entities.Route", null)
                         .WithMany()
                         .HasForeignKey("LinesId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -216,22 +270,6 @@ namespace TPL.Migrations
                         .HasForeignKey("StationsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TPL.Data.Entities.Bus", b =>
-                {
-                    b.HasOne("TPL.Data.Entities.Line", "Line")
-                        .WithMany("Buses")
-                        .HasForeignKey("LineId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Line");
-                });
-
-            modelBuilder.Entity("TPL.Data.Entities.Line", b =>
-                {
-                    b.Navigation("Buses");
                 });
 #pragma warning restore 612, 618
         }
