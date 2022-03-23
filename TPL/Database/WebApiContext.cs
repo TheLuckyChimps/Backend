@@ -15,6 +15,9 @@ namespace TPL.Database
 
         }
         public DbSet<User> Users { get; set; }
+        public DbSet<Transaction> Transaction { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<SalePoint> SalePoint { get; set; }
         public DbSet<Bus> Buses { get; set; }
         public DbSet<Station> Stations { get; set; }
         public DbSet<Route> Lines { get; set; }
