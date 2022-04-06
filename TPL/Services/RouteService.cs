@@ -58,6 +58,58 @@ namespace TPL.Services
                 throw new NotImplementedException();
             }
         }
+        public async Task<List<RouteResponseDto>> GetAllStations(string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                var stations = await stationRepository.GetAllStationsAsync();
+
+                List<RouteResponseDto> stationsResponse = new List<RouteResponseDto>();
+
+                foreach (Station station in stations)
+                {
+                    var userResponse = mapper.Map<RouteResponseDto>(station);
+                    stationsResponse.Add(userResponse);
+                }
+                return stationsResponse;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+
+        }
+
+        public async Task DeleteStations(Guid id, string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                await stationRepository.DeleteAsync(id);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public async Task<RouteResponseDto> UpdateStation(RouteUpdateDto dto, string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                Station station = await stationRepository.GetByIdAsync(dto.Id);
+                var userMapped = mapper.Map<RouteUpdateDto, Station>(dto, station);
+                var updatedStation = await stationRepository.UpdateAsync(userMapped);
+                var mappedResponse = mapper.Map<RouteResponseDto>(updatedStation);
+                return mappedResponse;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
 
 
         public async Task<TokenData> GetUserFromToken(string token)
