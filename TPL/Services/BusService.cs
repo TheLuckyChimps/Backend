@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TPL.Data.Atributes;
 using TPL.Data.Common;
-using TPL.Data.Dtos.RouteDtos;
+using TPL.Data.Dtos.BusDtos;
 using TPL.Data.Entities;
 using TPL.Data.Enums;
 using TPL.Repository.Interfaces;
@@ -16,40 +15,33 @@ using TPL.Services.Interfaces;
 
 namespace TPL.Services
 {
-    public class RouteService : IRouteService
+    public class BusService : IBusService
     {
         private readonly IMapper mapper;
         private readonly AppSettings appSettings;
-        private readonly ILineRepository lineRepository;
-        private readonly IStationRepository stationRepository;
+        private readonly IBusRepository busRepository;
         //private readonly IConfigurationService
 
-        public RouteService(ILineRepository lineRepository, IStationRepository stationRepository, IMapper mapper, IOptions<AppSettings> appSettings)
+        public BusService(IBusRepository busRepository, IMapper mapper, IOptions<AppSettings> appSettings)
         {
-            this.lineRepository = lineRepository;
-            this.stationRepository = stationRepository;
+            this.busRepository = busRepository;
             this.mapper = mapper;
             this.appSettings = appSettings.Value;
         }
 
-        public async Task<RouteResponseDto> CreateRoute(RouteCreateDto routeDto, string token)
+        public async Task<BusResponseDto> CreateBus(BusCreateDto busDto, string token)
         {
-            Guid empty = new Guid("00000000-0000-0000-0000-000000000000");
-            var defaultStation = await stationRepository.GetByIdAsync(empty);
-            var station = new Station()
-            {
-                Id = empty
-            };
+
             var auth = await GetUserFromToken(token);
             if (auth.Role == UserRole.Admin.ToString())
             {
                 // get lines
-                var route = mapper.Map<RouteCreateDto, Route>(routeDto);
+                var bus = mapper.Map<BusCreateDto, Bus>(busDto);
                 //station.Lines.Add(line);
                 //station.Line
-                //route.Stations.Add(defaultStation);
-                var createdStation = await lineRepository.InsertAsync(route, auth.Id);
-                var result = mapper.Map<Route, RouteResponseDto>(createdStation);
+                //bus.Stations.Add(defaultStation);
+                var createdBus = await busRepository.InsertAsync(bus, auth.Id);
+                var result = mapper.Map<Bus, BusResponseDto>(createdBus);
 
                 return result;
             }
@@ -58,21 +50,21 @@ namespace TPL.Services
                 throw new NotImplementedException();
             }
         }
-        public async Task<List<RouteResponseDto>> GetAllStations(string token)
+        public async Task<List<BusResponseDto>> GetAllBuses(string token)
         {
             var auth = await GetUserFromToken(token);
             if (auth.Role == UserRole.Admin.ToString())
             {
-                var stations = await stationRepository.GetAllStationsAsync();
+                var buses = await busRepository.GetAllAsync();
 
-                List<RouteResponseDto> stationsResponse = new List<RouteResponseDto>();
+                List<BusResponseDto> busesResponse = new List<BusResponseDto>();
 
-                foreach (Station station in stations)
+                foreach (Bus station in buses)
                 {
-                    var userResponse = mapper.Map<RouteResponseDto>(station);
-                    stationsResponse.Add(userResponse);
+                    var userResponse = mapper.Map<BusResponseDto>(station);
+                    busesResponse.Add(userResponse);
                 }
-                return stationsResponse;
+                return busesResponse;
             }
             else
             {
@@ -81,12 +73,12 @@ namespace TPL.Services
 
         }
 
-        public async Task DeleteStations(Guid id, string token)
+        public async Task DeleteBus(Guid id, string token)
         {
             var auth = await GetUserFromToken(token);
             if (auth.Role == UserRole.Admin.ToString())
             {
-                await stationRepository.DeleteAsync(id);
+                await busRepository.DeleteAsync(id);
             }
             else
             {
@@ -94,15 +86,15 @@ namespace TPL.Services
             }
         }
 
-        public async Task<RouteResponseDto> UpdateStation(RouteUpdateDto dto, string token)
+        public async Task<BusResponseDto> UpdateBus(BusUpdateDto dto, string token)
         {
             var auth = await GetUserFromToken(token);
             if (auth.Role == UserRole.Admin.ToString())
             {
-                Station station = await stationRepository.GetByIdAsync(dto.Id);
-                var userMapped = mapper.Map<RouteUpdateDto, Station>(dto, station);
-                var updatedStation = await stationRepository.UpdateAsync(userMapped);
-                var mappedResponse = mapper.Map<RouteResponseDto>(updatedStation);
+                var bus = await busRepository.GetByIdAsync(dto.Id);
+                var busMapped = mapper.Map<BusUpdateDto, Bus>(dto, bus);
+                var updatedBus = await busRepository.UpdateAsync(busMapped);
+                var mappedResponse = mapper.Map<BusResponseDto>(updatedBus);
                 return mappedResponse;
             }
             else
