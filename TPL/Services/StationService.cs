@@ -32,11 +32,7 @@ namespace TPL.Services
 
         public async Task<StationResponseDto> CreateStation(StationCreateDto stationDto, string token)
         {
-            Guid empty = new Guid("00000000-0000-0000-0000-000000000000");
-            var line = new Route()
-            {
-                Id = empty
-            };
+
             var auth = await GetUserFromToken(token);
             if (auth.Role == UserRole.Admin.ToString())
             {
@@ -54,6 +50,60 @@ namespace TPL.Services
                 throw new NotImplementedException();
             }
         }
+
+        public async Task<List<StationResponseDto>> GetAllStations(string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                var stations = await stationRepository.GetAllStationsAsync();
+
+                List<StationResponseDto> stationsResponse = new List<StationResponseDto>();
+
+                foreach (Station station in stations)
+                {
+                    var userResponse = mapper.Map<StationResponseDto>(station);
+                    stationsResponse.Add(userResponse);
+                }
+                return stationsResponse;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+            
+        }
+
+        public async Task DeleteStations(Guid id, string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                await stationRepository.DeleteAsync(id);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public async Task<StationResponseDto> UpdateStation(StationUpdateDto dto, string token)
+        {
+            var auth = await GetUserFromToken(token);
+            if (auth.Role == UserRole.Admin.ToString())
+            {
+                Station station = await stationRepository.GetByIdAsync(dto.Id);
+                var userMapped = mapper.Map<StationUpdateDto, Station>(dto, station);
+                var updatedStation = await stationRepository.UpdateAsync(userMapped);
+                var mappedResponse = mapper.Map<StationResponseDto>(updatedStation);
+                return mappedResponse;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
 
         public async Task<TokenData> GetUserFromToken(string token)
