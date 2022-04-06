@@ -22,6 +22,7 @@ namespace TPL.Servicies
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
         private readonly AppSettings appSettings;
+        //private readonly IConfigurationService
 
         public UserService(IUserRepository userRepository, IMapper mapper, IOptions<AppSettings> appSettings)
         {
@@ -64,17 +65,28 @@ namespace TPL.Servicies
             return result;
         }
 
-        public async Task<List<UserResponseDto>> GetAllUsers()
+        public async Task<List<UserResponseDto>> GetAllUsers(string token)
         {
-            List<UserResponseDto> response = new List<UserResponseDto>();
-            var users = await userRepository.GetAllUsersAsync();
-            foreach (User user in users)
+            var userr = await GetUserFromToken(token.Split(" ").Last());
+            if (userr.Role == UserRole.Admin)
             {
-                var mappedUser = mapper.Map<UserResponseDto>(user);
-                response.Add(mappedUser);
-            }
 
-            return response;
+
+                //var userr = await GetUserFromToken(token.Split(" ").Last());
+                List<UserResponseDto> response = new List<UserResponseDto>();
+                var users = await userRepository.GetAllUsersAsync();
+                foreach (User user in users)
+                {
+                    var mappedUser = mapper.Map<UserResponseDto>(user);
+                    response.Add(mappedUser);
+                }
+
+                return response;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public async Task<Guid> DeleteUser(Guid id)
@@ -157,6 +169,16 @@ namespace TPL.Servicies
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public async Task<User> GetUserFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(token);
+            string id = jwtSecurityToken.Claims.First(claim => claim.Type == "id").Value;
+            string role = jwtSecurityToken.Claims.First(claim => claim.Type == "role").Value;
+            User user = await userRepository.GetByIdAsync(new Guid(id));
+            return user;
         }
 
     }

@@ -51,7 +51,7 @@ namespace TPL.Middleware
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = jwtToken.Claims.First(x => x.Type == "id").Value.ToString();
-
+                //var role = jwtToken.Claims.First(x => x.Type == "role").Value.ToString();
                 // attach user to context on successful jwt validation
                 var ii = await userService.GetById(new Guid(userId));
                 context.Items["User"] = ii;

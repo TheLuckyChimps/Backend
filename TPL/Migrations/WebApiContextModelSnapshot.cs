@@ -19,21 +19,6 @@ namespace TPL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("RouteStation", b =>
-                {
-                    b.Property<Guid>("LinesId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("StationsId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LinesId", "StationsId");
-
-                    b.HasIndex("StationsId");
-
-                    b.ToTable("RouteStation");
-                });
-
             modelBuilder.Entity("TPL.Data.Entities.Announcement", b =>
                 {
                     b.Property<Guid>("Id")
@@ -197,6 +182,44 @@ namespace TPL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Lines");
+                });
+
+            modelBuilder.Entity("TPL.Data.Entities.RouteStation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<Guid?>("LineId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("StationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LineId");
+
+                    b.HasIndex("StationId");
+
+                    b.ToTable("RouteStation");
                 });
 
             modelBuilder.Entity("TPL.Data.Entities.SalePoint", b =>
@@ -372,19 +395,31 @@ namespace TPL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RouteStation", b =>
+            modelBuilder.Entity("TPL.Data.Entities.RouteStation", b =>
                 {
-                    b.HasOne("TPL.Data.Entities.Route", null)
-                        .WithMany()
-                        .HasForeignKey("LinesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TPL.Data.Entities.Route", "Route")
+                        .WithMany("RouteStation")
+                        .HasForeignKey("LineId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("TPL.Data.Entities.Station", null)
-                        .WithMany()
-                        .HasForeignKey("StationsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("TPL.Data.Entities.Station", "Station")
+                        .WithMany("RouteStation")
+                        .HasForeignKey("StationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Route");
+
+                    b.Navigation("Station");
+                });
+
+            modelBuilder.Entity("TPL.Data.Entities.Route", b =>
+                {
+                    b.Navigation("RouteStation");
+                });
+
+            modelBuilder.Entity("TPL.Data.Entities.Station", b =>
+                {
+                    b.Navigation("RouteStation");
                 });
 #pragma warning restore 612, 618
         }

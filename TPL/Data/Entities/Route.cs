@@ -13,7 +13,7 @@ namespace TPL.Data.Entities
         //public List<string> StationNames { get; set; }
         public string StartName { get; set; }
         public string StopName { get; set; }
-        public virtual List<Station> Stations { get; set; }
+        public virtual List<RouteStation> RouteStation { get; set; }
         // public List<Bus> Buses { get; set; }
     }
 }
