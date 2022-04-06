@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using TPL.Data.Common;
 
-namespace TPL.Data.Entities
+namespace TPL.Data.Dtos.StationDtos
 {
-    public class Station : BaseEntity<Guid>
+    public class StationCreateDto
     {
         public string Name { get; set; }
         public string Address { get; set; }
         public double Longitude { get; set; }
         public double Latitude { get; set; }
-        public virtual List<RouteStation> RouteStation { get; set; }
-
     }
 }

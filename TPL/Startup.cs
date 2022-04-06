@@ -84,6 +84,12 @@ namespace TPL
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAnnouncementService, AnnouncementService>();
             services.AddScoped<IAnnouncementRepository, AnnouncementRepository>();
+            services.AddScoped<IStationService, StationService>();
+            services.AddScoped<IStationRepository, StationRepository>();
+            services.AddScoped<IRouteStationService, RouteStationService>();
+            services.AddScoped<IRouteStationRepository, RouteStationRepository>();
+            services.AddScoped<IRouteService, RouteService>();
+            services.AddScoped<ILineRepository, LineRepository>();
 
 
         }

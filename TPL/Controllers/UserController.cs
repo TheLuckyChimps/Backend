@@ -29,16 +29,16 @@ namespace TPL.Controllers
             var response = await userService.CreateUser(user);
             return Ok(response);
         }
+
         [JwtAuthorizeAttribute]
         [HttpGet("GetAll")]
-        public async Task<IActionResult> UserGetAll()
+        public async Task<IActionResult> UserGetAll(string token)
         {
 
-            var response = await userService.GetAllUsers();
+            var response = await userService.GetAllUsers(token);
             return Ok(response);
-
-
         }
+
         [JwtAuthorizeAttribute]
         [HttpDelete("DeleteById")]
         public async Task<IActionResult> UserDelete(Guid id)
@@ -48,6 +48,7 @@ namespace TPL.Controllers
             return Ok(response);
 
         }
+
         [JwtAuthorizeAttribute]
         [HttpPut("Update:{id}")]
         public async Task<IActionResult> UserUpdate(Guid id, UserUpdateDto dto)
@@ -55,8 +56,6 @@ namespace TPL.Controllers
 
             var response = await userService.UpdateUser(dto, id);
             return Ok(response);
-
-
         }
 
         [AllowAnonymous]

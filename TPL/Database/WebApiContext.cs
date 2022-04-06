@@ -22,12 +22,15 @@ namespace TPL.Database
         public DbSet<Station> Stations { get; set; }
         public DbSet<Route> Lines { get; set; }
         public DbSet<Announcement> Announcement { get; set; }
+        public DbSet<RouteStation> RouteStation { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-     
+           
+
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            
             base.OnModelCreating(builder);
         }
     }

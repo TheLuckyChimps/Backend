@@ -16,12 +16,7 @@ namespace TPL.Database
 
             builder.Property(ti => ti.BusId);
 
-
-            builder.HasMany(ti => ti.Stations)
-                 .WithMany(li => li.Lines);
-
             builder.Property(ti => ti.StartName);
-
 
             builder.Property(ti => ti.StopName);
 
