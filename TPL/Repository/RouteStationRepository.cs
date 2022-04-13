@@ -24,9 +24,10 @@ namespace TPL.Repository
             throw new NotImplementedException();
         }
 
-        public Task<List<RouteStation>> GetAllStationsAsync()
+        public async Task<List<RouteStation>> GetAllStationsAsync()
         {
-            throw new NotImplementedException();
+            var routeStations = await dbSet.Where(e => e.IsDeleted == false).ToListAsync();
+            return routeStations;
         }
 
         public Task<RouteStation> GetByIdAsync(Guid id)

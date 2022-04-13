@@ -31,6 +31,12 @@ namespace TPL.Repository
             return Routes;
         }
 
+        public async Task<List<Route>> GetAllStationsByRouteIdAsync(Guid id)
+        {
+            var Routes = await dbSet.Where(e => e.IsDeleted == false).ToListAsync();
+            return Routes;
+        }
+
         public async Task<Route> InsertAsync(Route Route, Guid userId)
         {
             Route.OnCreate(userId);
