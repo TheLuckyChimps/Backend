@@ -23,6 +23,11 @@ using TPL.Middleware;
 using TPL.Data.Atributes;
 using TPL.Services.Interfaces;
 using TPL.Services;
+using FluentValidation.AspNetCore;
+using FluentValidation;
+using TPL.Data.Entities;
+using TPL.Data.Validations;
+using TPL.Data.Dtos;
 
 namespace TPL
 {
@@ -37,6 +42,7 @@ namespace TPL
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+            services.AddFluentValidation();
             services.AddControllersWithViews();
             services.AddCors(options =>
             {
@@ -93,6 +99,9 @@ namespace TPL
             services.AddScoped<IBusService, BusService>();
             services.AddScoped<IBusRepository, BusRepository>();
 
+            services.AddTransient<IValidator<UserCreateDto>, UserValidator>();
+            // services.AddMvc().AddFluentValidation;
+
 
         }
 
@@ -104,6 +113,8 @@ namespace TPL
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TPL v1"));
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 
