@@ -32,5 +32,15 @@ namespace TPL.Controllers
 
 
         }
+
+        [HttpPost("GetStationsByLine")]
+        public async Task<IActionResult> GetByLine(Guid lineId, string token)
+        {
+
+            var response = await routeStationService.GetAllStationByRouteId(lineId, token);
+            return Ok(response);
+
+
+        }
     }
 }

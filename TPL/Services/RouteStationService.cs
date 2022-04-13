@@ -20,6 +20,7 @@ namespace TPL.Services
         private readonly AppSettings appSettings;
         private readonly IRouteStationRepository routeStationRepository;
         private readonly ILineRepository routeRepository;
+        //private readonly ILineRepository stationRepository;
         private readonly IStationRepository stationRepository;
         //private readonly IConfigurationService
 
@@ -47,6 +48,28 @@ namespace TPL.Services
             response.Route = mappedRoute;
             response.Station = mappedStation;
             response.Id = addedRouteStation.Id;
+            return response;
+        }
+
+        public async Task<List<StationByRouteIdDto>> GetAllStationByRouteId(Guid lineId, string token)
+        {
+            var route = await routeRepository.GetByIdAsync(lineId);
+            var response = new List<StationByRouteIdDto>();
+            var routesStations = await routeStationRepository.GetAllStationsAsync();
+            foreach (var item in routesStations)
+            {
+                if(lineId == item.LineId)
+                {
+                    var station = await stationRepository.GetByIdAsync(item.StationId);
+                    var mappedStation = mapper.Map<Station, StationResponseDto>(station);
+                    var stationByRoute = new StationByRouteIdDto
+                    {
+                        LineId = lineId,
+                        Station = mappedStation
+                    };
+                    response.Add(stationByRoute);
+                }
+            }
             return response;
         }
 

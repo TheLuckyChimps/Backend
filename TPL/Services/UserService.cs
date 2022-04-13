@@ -30,7 +30,7 @@ namespace TPL.Servicies
             this.mapper = mapper;
             this.appSettings = appSettings.Value;
         }
-        public async Task<UserResponseDto> CreateUser(UserCreateDto userDto)
+        public async Task<UserRegisterResponse> CreateUser(UserCreateDto userDto)
         {
             if (await userRepository.GetByEmail(userDto.Email) != null)
             {
@@ -49,17 +49,13 @@ namespace TPL.Servicies
             };
             var addedUser = await userRepository.InsertAsync(user);
 
-            var result = new UserResponseDto
+            var result = new UserRegisterResponse
             {
                 Id = addedUser.Id,
                 Name = addedUser.Name,
                 Email = addedUser.Email,
-                Password = addedUser.Password,
                 Address = addedUser.Address,
                 Surname = addedUser.Surname,
-                Role = addedUser.Role,
-                CreatedAt = addedUser.CreatedAt,
-                CreatedBy = addedUser.CreatedBy
             };
 
             return result;
