@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using TPL.Data.Atributes;
 using TPL.Data.Dtos;
 using TPL.Data.Entities;
 using TPL.Data.Enums;
+using TPL.Data.ExceptionTypes;
+using TPL.Data.Validations;
 using TPL.Repository.Interfaces;
 using TPL.Servicies.Interfaces;
 
@@ -34,35 +37,45 @@ namespace TPL.Servicies
         {
             if (await userRepository.GetByEmail(userDto.Email) != null)
             {
+                throw new HttpStatusCodeException(HttpStatusCode.Conflict, "This email is already in use");
+            }
+            var validator = new UserValidator();
+            var validatedUser = validator.Validate(userDto);
+            if(validatedUser.IsValid == true)
+            {
+                var user = new User
+                {
+                    Name = userDto.Name,
+                    Email = userDto.Email,
+                    Password = userDto.Password,
+                    Role = UserRole.Client,
+                    Address = userDto.Address,
+                    Surname = userDto.Surname
+
+                };
+
+                var addedUser = await userRepository.InsertAsync(user);
+
+                var result = new UserResponseDto
+                {
+                    Id = addedUser.Id,
+                    Name = addedUser.Name,
+                    Email = addedUser.Email,
+                    //Password = addedUser.Password,
+                    Address = addedUser.Address,
+                    Surname = addedUser.Surname,
+                    Role = addedUser.Role,
+                    CreatedAt = addedUser.CreatedAt,
+                    CreatedBy = addedUser.CreatedBy
+                };
+
+                return result;
+            }
+            else
+            {
                 throw new NotImplementedException();
             }
-
-            var user = new User
-            {
-                Name = userDto.Name,
-                Email = userDto.Email,
-                Password = userDto.Password,
-                Role = UserRole.Client,
-                Address = userDto.Address,
-                Surname = userDto.Surname
-
-            };
-            var addedUser = await userRepository.InsertAsync(user);
-
-            var result = new UserResponseDto
-            {
-                Id = addedUser.Id,
-                Name = addedUser.Name,
-                Email = addedUser.Email,
-                Password = addedUser.Password,
-                Address = addedUser.Address,
-                Surname = addedUser.Surname,
-                Role = addedUser.Role,
-                CreatedAt = addedUser.CreatedAt,
-                CreatedBy = addedUser.CreatedBy
-            };
-
-            return result;
+            
         }
 
         public async Task<List<UserResponseDto>> GetAllUsers(string token)
