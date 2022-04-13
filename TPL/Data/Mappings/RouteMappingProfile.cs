@@ -14,9 +14,9 @@ namespace TPL.Data.Mappings
         {
             CreateMap<RouteCreateDto, Route>();
             CreateMap<RouteResponseDto, Route>();
-            //CreateMap<StationUpdateDto, Station>();
+            CreateMap<RouteUpdateDto, Station>();
             CreateMap<Route, RouteResponseDto>();
-            //CreateMap<Station, StationUpdateDto>();
+            CreateMap<Station, RouteUpdateDto>();
         }
     }
 }

@@ -96,6 +96,8 @@ namespace TPL
             services.AddScoped<IRouteStationRepository, RouteStationRepository>();
             services.AddScoped<IRouteService, RouteService>();
             services.AddScoped<ILineRepository, LineRepository>();
+            services.AddScoped<IBusService, BusService>();
+            services.AddScoped<IBusRepository, BusRepository>();
 
             services.AddTransient<IValidator<UserCreateDto>, UserValidator>();
             // services.AddMvc().AddFluentValidation;
