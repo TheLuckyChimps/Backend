@@ -50,6 +50,25 @@ namespace TPL.Services
             return response;
         }
 
+        public async Task<List<RouteStationResponseDto>> GetRouteStation(string token)
+        {
+            var respone = new List<RouteStationResponseDto>();
+            var routeStations = await routeStationRepository.GetAllStationsAsync();
+            foreach (var item in routeStations)
+            {
+                var routeStation = new RouteStationResponseDto();
+                var route = await routeRepository.GetByIdAsync(item.LineId);
+                var station = await stationRepository.GetByIdAsync(item.StationId);
+                var mappedStation = mapper.Map<Station, StationResponseDto>(station);
+                var mappedRoute = mapper.Map<Route, RouteResponseDto>(route);
+                routeStation.Route = mappedRoute;
+                routeStation.Station = mappedStation;
+                routeStation.Id = item.Id;
+                respone.Add(routeStation);
+            }
+            return respone;
+        }
+
         //public async Task<>
     }
 }

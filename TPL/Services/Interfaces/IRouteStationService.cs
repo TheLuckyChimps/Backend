@@ -10,5 +10,6 @@ namespace TPL.Services.Interfaces
     public interface IRouteStationService
     {
         Task<RouteStationResponseDto> CreateRouteStation(RouteStationCreateDto stationDto, string token);
+        Task<List<RouteStationResponseDto>> GetRouteStation(string token);
     }
 }

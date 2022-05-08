@@ -32,5 +32,16 @@ namespace TPL.Controllers
 
 
         }
+
+        //[JwtAuthorizeAttribute]
+        [HttpGet("Get-all")]
+        public async Task<IActionResult> GetAll(string token)
+        {
+
+            var response = await routeStationService.GetRouteStation(token);
+            return Ok(response);
+
+
+        }
     }
 }
