@@ -27,8 +27,30 @@ namespace TPL.Controllers
 
             var response = await RouteService.CreateRoute(RouteDto, token);
             return Ok(response);
+        }
 
+        [JwtAuthorizeAttribute]
+        [HttpGet("Get-All")]
+        public async Task<IActionResult> GetAllStations(string token)
+        {
+            var response = await RouteService.GetAllStations(token);
+            return Ok(response);
+        }
 
+        [JwtAuthorizeAttribute]
+        [HttpDelete("DeleteById")]
+        public async Task<IActionResult> DeleteStation(Guid id, string token)
+        {
+            await RouteService.DeleteStations(id, token);
+            return Ok();
+        }
+        [JwtAuthorizeAttribute]
+        [HttpPut("Update")]
+        public async Task<IActionResult> UpdateStation(RouteUpdateDto dto, string token)
+        {
+
+            var response = await RouteService.UpdateStation(dto, token);
+            return Ok(response);
         }
     }
 }

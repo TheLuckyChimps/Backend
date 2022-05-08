@@ -58,6 +58,15 @@ namespace TPL.Controllers
             return Ok(response);
         }
 
+        [JwtAuthorizeAttribute]
+        [HttpGet("Get:{id}")]
+        public async Task<IActionResult> UserGetById(Guid id)
+        {
+
+            var response = await userService.GetById(id);
+            return Ok(response);
+        }
+
         [AllowAnonymous]
         [HttpPut("Update Password")]
         public async Task<IActionResult> ResetPassword(string email, string newPassword)
