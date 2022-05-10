@@ -109,6 +109,7 @@ namespace TPL
             services.AddScoped<IBusRepository, BusRepository>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IConfigurationService, ConfigurationService>();

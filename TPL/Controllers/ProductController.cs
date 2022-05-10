@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using TPL.Data.Atributes;
 using TPL.Data.Dtos.ProductDtos;
+using TPL.Data.Dtos.TransactionDtos;
 using TPL.Services.Interfaces;
 
 namespace TPL.Controllers
@@ -20,7 +21,7 @@ namespace TPL.Controllers
         }
 
         [JwtAuthorizeAttribute]
-        [HttpPost("Create")]
+        [HttpPost("Create-Product")]
         public async Task<IActionResult> CreateProduct(ProductCreateDto productDto)
         {
             var response = await productService.CreateProduct(productDto);
@@ -32,6 +33,14 @@ namespace TPL.Controllers
         public async Task<IActionResult> CreateStation()
         {
             var response = await productService.GetAllProducts();
+            return Ok(response);
+        }
+
+        [JwtAuthorizeAttribute]
+        [HttpPost("Create-Transaction")]
+        public async Task<IActionResult> CreateTransaction(Guid productId)
+        {
+            var response = await productService.CreateTransaction(productId);
             return Ok(response);
         }
     }
