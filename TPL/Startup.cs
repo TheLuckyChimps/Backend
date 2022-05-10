@@ -28,6 +28,8 @@ using FluentValidation;
 using TPL.Data.Entities;
 using TPL.Data.Validations;
 using TPL.Data.Dtos;
+using Microsoft.AspNetCore.Http;
+using TPL.Data.Common;
 
 namespace TPL
 {
@@ -82,6 +84,13 @@ namespace TPL
             });
               
             });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy => policy.RequireClaim("custom:role", "Admin"));
+                options.AddPolicy("Basic", policy => policy.RequireClaim("custom:role", "User"));
+            });
+
             services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
             services.AddDbContext<WebApiContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("WebApiConection")));
@@ -98,6 +107,12 @@ namespace TPL
             services.AddScoped<ILineRepository, LineRepository>();
             services.AddScoped<IBusService, BusService>();
             services.AddScoped<IBusRepository, BusRepository>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IConfigurationService, ConfigurationService>();
 
             services.AddTransient<IValidator<UserCreateDto>, UserValidator>();
             // services.AddMvc().AddFluentValidation;
