@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using TPL.Data.Atributes;
 using TPL.Data.Common;
 using TPL.Data.Dtos.ProductDtos;
+using TPL.Data.Dtos.TransactionDtos;
 using TPL.Data.Entities;
 using TPL.Data.Enums;
 using TPL.Repository.Interfaces;
@@ -20,13 +21,15 @@ namespace TPL.Services
         private readonly IMapper mapper;
         private readonly AppSettings appSettings;
         private readonly IProductRepository productRepository;
+        private readonly ITransactionRepository transactionRepository;
         private readonly string jwt;
 
-        public ProductService(IMapper mapper, IProductRepository productRepository, IConfigurationService configurationService)
+        public ProductService(IMapper mapper, IProductRepository productRepository, IConfigurationService configurationService, ITransactionRepository transactionRepository)
         {
             this.mapper = mapper;
             jwt = configurationService.GetJwt();
             this.productRepository = productRepository;
+            this.transactionRepository = transactionRepository;
         }
         public async Task<ProductResponseDto> CreateProduct(ProductCreateDto product)
         {
@@ -39,6 +42,31 @@ namespace TPL.Services
                 //station.Line
                 var createdProduct = await productRepository.InsertAsync(station, auth.Id);
                 var result = mapper.Map<Product, ProductResponseDto>(createdProduct);
+
+                return result;
+            }
+            else
+            {
+                throw new Exception("Not allowed");
+            }
+        }
+
+        public async Task<TransactionResponseDto> CreateTransaction(Guid productId)
+        {
+            var auth = await GetUserFromToken(jwt);
+            if (auth.Role == UserRole.Admin.ToString() || auth.Role == UserRole.Client.ToString())
+            {
+                // get lines
+                var transaction = new Transaction()
+                {
+                    ProductId = productId,
+                    UserId = auth.Id
+                };
+                //var transaction = mapper.Map<TransactionCreateDto, Transaction>(transactionDto);
+                //station.Lines.Add(line);
+                //station.Line
+                var createdProduct = await transactionRepository.InsertAsync(transaction, auth.Id);
+                var result = mapper.Map<Transaction, TransactionResponseDto>(createdProduct);
 
                 return result;
             }
