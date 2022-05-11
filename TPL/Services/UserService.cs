@@ -13,6 +13,7 @@ using TPL.Data.Atributes;
 using TPL.Data.Dtos;
 using TPL.Data.Entities;
 using TPL.Data.Enums;
+using TPL.Data.Exceptions;
 using TPL.Data.ExceptionTypes;
 using TPL.Data.Validations;
 using TPL.Repository.Interfaces;
@@ -69,7 +70,7 @@ namespace TPL.Servicies
             }
             else
             {
-                throw new NotImplementedException();
+                throw new AlreadyExistException();
             }
             
         }

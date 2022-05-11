@@ -39,7 +39,9 @@ namespace TPL.Controllers
         {
 
             var response = await routeStationService.GetRouteStation(token);
+            return Ok(response);
         }
+
         [HttpPost("GetStationsByLine")]
         public async Task<IActionResult> GetByLine(Guid lineId, string token)
         {
