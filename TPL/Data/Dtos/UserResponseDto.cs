@@ -14,7 +14,7 @@ namespace TPL.Data.Dtos
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Address { get; set; }
-        public UserRole Role { get; set; }
+        //public UserRole Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTime UpdatedAt { get; set; }
